@@ -11,7 +11,7 @@ app.use(express.json())
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.5lehpdk.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -28,8 +28,32 @@ async function run() {
 
         const taskCollection = client.db('taskHub').collection('tasks')
 
+
         app.get('/tasks', async (req, res) => {
             const result = await taskCollection.find().toArray()
+            res.send(result)
+        })
+
+        app.get('/tasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await taskCollection.findOne(query)
+            res.send(result)
+        })
+
+        app.post('/tasks', async (req, res) => {
+            const newTask = req.body;
+            const result = await taskCollection.insertOne(newTask);
+            res.send(result)
+        })
+
+
+
+        // Delete task method
+        app.delete('/tasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const result = await taskCollection.deleteOne(filter)
             res.send(result)
         })
 
