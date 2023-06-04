@@ -47,6 +47,24 @@ async function run() {
             res.send(result)
         })
 
+        // update method for task update
+
+        app.patch('/tasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedTask = req.body
+            const query = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updateData = {
+                $set: {
+                    title: updatedTask.title,
+                    description: updatedTask.description,
+                }
+            }
+
+            const result = await taskCollection.updateOne(query, updateData, options)
+            res.send(result)
+
+        });
 
 
         // Delete task method
