@@ -6,7 +6,7 @@ const app = express()
 const port = process.env.PORT || 5000
 
 
-// middleware 
+//---- middleware----// 
 app.use(cors())
 app.use(express.json())
 
@@ -29,7 +29,7 @@ async function run() {
 
         const taskCollection = client.db('taskHub').collection('tasks')
 
-
+        // ----Data Read operation----//
         app.get('/tasks', async (req, res) => {
             try {
                 const result = await taskCollection.find().toArray();
@@ -39,6 +39,7 @@ async function run() {
             }
         });
 
+        //---- get the specific task by id ----//
         app.get('/tasks/:id', async (req, res) => {
 
             try {
@@ -60,7 +61,7 @@ async function run() {
             }
         });
 
-
+        // ----data create operation & this method is for add task into the data base ----//
         app.post('/tasks', async (req, res) => {
             try {
                 const newTask = req.body;
@@ -78,7 +79,7 @@ async function run() {
         });
 
 
-        // update method for task update
+        // ----update method for task update---//
 
         app.patch('/tasks/:id', async (req, res) => {
             try {
@@ -113,7 +114,8 @@ async function run() {
 
 
 
-        // Delete task method
+        // -----Delete task method-----//
+
         app.delete('/tasks/:id', async (req, res) => {
             try {
                 const id = req.params.id;
@@ -146,7 +148,7 @@ async function run() {
 run().catch(console.dir);
 
 
-
+// ----server test function ---//
 app.get('/', (req, res) => {
     res.send('Task Hub server is running........')
 })
